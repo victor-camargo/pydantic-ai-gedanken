@@ -5,12 +5,12 @@ repo_url: https://github.com/victor-camargo/pydantic-ai-gedanken
 repo_name: victor-camargo/pydantic-ai-gedanken
 
 nav:
-- src/index.md
+- index.md
 - Capabilities:
-  - DynamicOutput: src/capabilities/dynamic_output.md
-  - CustomDocs: src/capabilities/custom_docs.md
+  - DynamicOutput: capabilities/dynamic_output.md
+  - CustomDocs: capabilities/custom_docs.md
 - API Reference:
-  - dynamic_output: src/api_reference/dynamic_output.md
+  - dynamic_output: api_reference/dynamic_output.md
 
 extra:
   # hide the "Made with Material for MkDocs" message
