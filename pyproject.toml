@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.27.0"]
+requires = ["hatchling>=1.31.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -38,7 +38,7 @@ dev = [
     "prek>=0.4.11",
     "uvicorn>=0.51.0",
     "datamodel-code-generator[http]>=0.71.0",
-    "pydantic-ai-slim[web]>=2.18.0",
+    "pydantic-ai-slim[web]>=2.20.0",
 ]
 
 lint = [
