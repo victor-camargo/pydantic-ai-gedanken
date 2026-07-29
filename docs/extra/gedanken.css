@@ -1,0 +1,1125 @@
+/* Gedanken design system → Material for MkDocs.
+ *
+ * Layer 1 mirrors `gedanken_system_design/tokens/*.css` verbatim.
+ * Layer 2 binds Material's own custom properties to those tokens, so the theme
+ * inherits the system instead of being patched piece by piece.
+ * Layers 3+ only cover surfaces Material draws that the system has an opinion
+ * about: borders over shadow, one accent, three weights, mono for machine text.
+ *
+ * Fonts are the same flagged Google Fonts substitution the system declares in
+ * `tokens/fonts.css`; `theme.font: false` in mkdocs.yml stops Material from
+ * requesting its own 300/700 cut, which this system does not use.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+/* ===================================================================== *
+ * 1. Tokens — from gedanken_system_design/tokens/
+ * ===================================================================== */
+
+:root {
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Ink — text and strokes */
+  --ink-900: #16161a;
+  --ink-700: #2e2c29;
+  --ink-500: #55524c;
+  --ink-300: #8a867e;
+  --ink-200: #a9a49c;
+
+  /* Paper — surfaces */
+  --paper-000: #ffffff;
+  --paper-050: #faf9f7;
+  --paper-100: #f3f1ed;
+  --paper-200: #eae6e0;
+  --paper-300: #ddd9d3;
+  --paper-400: #c9c4bc;
+
+  /* Signal — the single accent, from the mark's lens */
+  --signal-700: #7c3b21;
+  --signal-600: #8e4526;
+  --signal-500: #a9552f;
+  --signal-400: #c9713f;
+  --signal-100: #f0d6c8;
+  --signal-050: #f8ebe3;
+
+  /* Semantic — same muted chroma family as signal */
+  --state-ok: #3d6b52;
+  --state-ok-bg: #e7efe9;
+  --state-warn: #8e7326;
+  --state-warn-bg: #f3eedc;
+  --state-danger: #a33a2c;
+  --state-danger-bg: #f6e3e0;
+  --state-info: #3b5f7a;
+  --state-info-bg: #e4ebf1;
+
+  /* Semantic aliases */
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-500);
+  --text-tertiary: var(--ink-300);
+  --text-inverse: var(--paper-050);
+  --text-accent: var(--signal-500);
+  --text-link: var(--signal-500);
+  --text-link-hover: var(--ink-900);
+
+  --surface-page: var(--paper-050);
+  --surface-card: var(--paper-000);
+  --surface-sunken: var(--paper-100);
+  --surface-inverse: var(--ink-900);
+  --surface-accent: var(--signal-500);
+  --surface-accent-soft: var(--signal-050);
+
+  --border-subtle: var(--paper-200);
+  --border-default: var(--paper-300);
+  --border-strong: var(--ink-900);
+  --border-accent: var(--signal-500);
+
+  --focus-ring: var(--signal-500);
+  --selection-bg: var(--signal-100);
+
+  /* Type ladder */
+  --text-2xs: 10px;
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: 22px;
+  --text-2xl: 26px;
+  --text-3xl: 34px;
+  --text-4xl: 44px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+
+  --tracking-display: -0.02em;
+  --tracking-tight: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-label: 0.14em;
+
+  --type-body: var(--weight-regular) var(--text-md)/var(--leading-normal) var(--font-sans);
+  --type-body-sm: var(--weight-regular) var(--text-sm)/var(--leading-normal) var(--font-sans);
+  --type-ui: var(--weight-medium) var(--text-sm)/1 var(--font-sans);
+  --type-mono: var(--weight-regular) var(--text-sm)/var(--leading-snug) var(--font-mono);
+  --type-label: var(--weight-medium) var(--text-xs)/1 var(--font-mono);
+
+  /* Spacing — 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --gutter-card: var(--space-6);
+  --gutter-section: var(--space-10);
+  --gutter-page: var(--space-16);
+
+  --control-h-sm: 28px;
+  --control-h-md: 36px;
+  --control-h-lg: 44px;
+
+  --measure-prose: 68ch;
+  --sidebar-w: 248px;
+  --header-h: 56px;
+
+  /* Geometry & depth — near-square, borders over shadow */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+
+  --border-w: 1px;
+  --border-w-strong: 2px;
+
+  --shadow-none: none;
+  --shadow-raised: 0 1px 2px rgba(22, 22, 26, 0.06);
+  --shadow-overlay: 0 8px 28px rgba(22, 22, 26, 0.12), 0 1px 2px rgba(22, 22, 26, 0.08);
+
+  --hatch: repeating-linear-gradient(135deg, var(--paper-100) 0 6px, var(--paper-000) 6px 12px);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --duration-instant: 80ms;
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 260ms;
+  --transition-control: color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+/* Dark is a real scope that remaps the aliases, not a filter. Material drives
+   it through `slate`, so that is where the system's `[data-theme="dark"]` goes. */
+[data-md-color-scheme="slate"] {
+  --text-primary: var(--paper-050);
+  --text-secondary: var(--ink-200);
+  --text-tertiary: var(--ink-300);
+  --text-inverse: var(--ink-900);
+  --text-accent: var(--signal-400);
+  --text-link: var(--signal-400);
+  --text-link-hover: var(--paper-050);
+
+  --surface-page: var(--ink-900);
+  --surface-card: #1d1d22;
+  --surface-sunken: #121216;
+  --surface-inverse: var(--paper-050);
+  --surface-accent: var(--signal-400);
+  --surface-accent-soft: #2a211d;
+
+  --border-subtle: #2a2a31;
+  --border-default: #3a3a42;
+  --border-strong: var(--paper-050);
+  --border-accent: var(--signal-400);
+
+  --focus-ring: var(--signal-400);
+  --selection-bg: #48301f;
+
+  --hatch: repeating-linear-gradient(135deg, #1d1d22 0 6px, #121216 6px 12px);
+  --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-overlay: 0 8px 28px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ===================================================================== *
+ * 2. Bridge — Material's custom properties, expressed in Gedanken tokens
+ * ===================================================================== */
+
+:root,
+[data-md-color-scheme="default"] {
+  --md-text-font: "IBM Plex Sans";
+  --md-code-font: "IBM Plex Mono";
+
+  --md-default-fg-color: var(--text-primary);
+  --md-default-fg-color--light: var(--text-secondary);
+  --md-default-fg-color--lighter: var(--text-tertiary);
+  --md-default-fg-color--lightest: var(--border-subtle);
+  --md-default-bg-color: var(--surface-page);
+  --md-default-bg-color--light: rgba(250, 249, 247, 0.7);
+  --md-default-bg-color--lighter: rgba(250, 249, 247, 0.3);
+  --md-default-bg-color--lightest: rgba(250, 249, 247, 0.12);
+
+  /* Header and tabs ride on paper; a 1px rule does the separating. */
+  --md-primary-fg-color: var(--surface-card);
+  --md-primary-fg-color--light: var(--surface-page);
+  --md-primary-fg-color--dark: var(--surface-inverse);
+  --md-primary-bg-color: var(--text-primary);
+  --md-primary-bg-color--light: var(--text-secondary);
+
+  /* Material's "accent" is the hover state, not the brand accent. */
+  --md-accent-fg-color: var(--text-link-hover);
+  --md-accent-fg-color--transparent: var(--surface-accent-soft);
+  --md-accent-bg-color: var(--text-inverse);
+  --md-accent-bg-color--light: var(--ink-200);
+
+  --md-typeset-color: var(--text-primary);
+  --md-typeset-a-color: var(--text-link);
+  --md-typeset-mark-color: var(--signal-100);
+  --md-typeset-del-color: var(--state-danger-bg);
+  --md-typeset-ins-color: var(--state-ok-bg);
+  --md-typeset-kbd-color: var(--surface-card);
+  --md-typeset-kbd-accent-color: var(--surface-sunken);
+  --md-typeset-kbd-border-color: var(--border-default);
+  --md-typeset-table-color: var(--border-subtle);
+  --md-typeset-table-color--light: var(--border-subtle);
+
+  --md-code-fg-color: var(--ink-700);
+  --md-code-bg-color: var(--surface-sunken);
+  --md-code-hl-color: var(--surface-accent-soft);
+  --md-code-hl-color--light: var(--surface-accent-soft);
+
+  --md-admonition-fg-color: var(--text-primary);
+  --md-admonition-bg-color: var(--surface-card);
+
+  --md-footer-fg-color: var(--paper-050);
+  --md-footer-fg-color--light: var(--ink-200);
+  --md-footer-fg-color--lighter: var(--ink-300);
+  --md-footer-bg-color: var(--ink-900);
+  --md-footer-bg-color--dark: #0f0f12;
+
+  --md-shadow-z1: var(--shadow-raised);
+  --md-shadow-z2: var(--shadow-raised);
+  --md-shadow-z3: var(--shadow-overlay);
+}
+
+/* Syntax colouring — an intentional addition. The system defines no code
+   palette, so this keeps to ink plus the signal and the muted semantics:
+   accent for keywords, ok for strings, info for literals, ink for everything
+   else. No second orange. */
+:root,
+[data-md-color-scheme="default"] {
+  --md-code-hl-keyword-color: var(--signal-600);
+  --md-code-hl-string-color: var(--state-ok);
+  --md-code-hl-number-color: var(--state-info);
+  --md-code-hl-constant-color: var(--state-info);
+  --md-code-hl-special-color: var(--state-warn);
+  --md-code-hl-function-color: var(--ink-900);
+  --md-code-hl-name-color: var(--ink-900);
+  --md-code-hl-variable-color: var(--ink-700);
+  --md-code-hl-operator-color: var(--ink-500);
+  --md-code-hl-punctuation-color: var(--ink-500);
+  --md-code-hl-comment-color: var(--ink-300);
+  --md-code-hl-generic-color: var(--ink-500);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-fg-color: var(--text-primary);
+  --md-default-fg-color--light: var(--text-secondary);
+  --md-default-fg-color--lighter: var(--text-tertiary);
+  --md-default-fg-color--lightest: var(--border-subtle);
+  --md-default-bg-color: var(--surface-page);
+  --md-default-bg-color--light: rgba(22, 22, 26, 0.7);
+  --md-default-bg-color--lighter: rgba(22, 22, 26, 0.3);
+  --md-default-bg-color--lightest: rgba(22, 22, 26, 0.12);
+
+  --md-primary-fg-color: var(--surface-page);
+  --md-primary-fg-color--light: var(--surface-card);
+  --md-primary-fg-color--dark: var(--surface-sunken);
+  --md-primary-bg-color: var(--text-primary);
+  --md-primary-bg-color--light: var(--text-secondary);
+
+  --md-accent-fg-color: var(--text-link-hover);
+  --md-accent-fg-color--transparent: var(--surface-accent-soft);
+  --md-accent-bg-color: var(--text-inverse);
+  --md-accent-bg-color--light: var(--ink-500);
+
+  --md-typeset-color: var(--text-primary);
+  --md-typeset-a-color: var(--text-link);
+  --md-typeset-mark-color: var(--selection-bg);
+  --md-typeset-del-color: rgba(163, 58, 44, 0.25);
+  --md-typeset-ins-color: rgba(61, 107, 82, 0.25);
+  --md-typeset-kbd-color: var(--surface-card);
+  --md-typeset-kbd-accent-color: var(--surface-sunken);
+  --md-typeset-kbd-border-color: var(--border-default);
+  --md-typeset-table-color: var(--border-subtle);
+  --md-typeset-table-color--light: var(--border-subtle);
+
+  --md-code-fg-color: var(--text-primary);
+  --md-code-bg-color: var(--surface-sunken);
+  --md-code-hl-color: var(--surface-accent-soft);
+  --md-code-hl-color--light: var(--surface-accent-soft);
+
+  --md-admonition-fg-color: var(--text-primary);
+  --md-admonition-bg-color: var(--surface-card);
+
+  --md-footer-fg-color: var(--paper-050);
+  --md-footer-fg-color--light: var(--ink-200);
+  --md-footer-fg-color--lighter: var(--ink-300);
+  --md-footer-bg-color: var(--surface-sunken);
+  --md-footer-bg-color--dark: #0b0b0e;
+
+  --md-shadow-z1: var(--shadow-raised);
+  --md-shadow-z2: var(--shadow-raised);
+  --md-shadow-z3: var(--shadow-overlay);
+
+  --md-code-hl-keyword-color: var(--signal-400);
+  --md-code-hl-string-color: #85ae96;
+  --md-code-hl-number-color: #86a9c6;
+  --md-code-hl-constant-color: #86a9c6;
+  --md-code-hl-special-color: #c7ac5e;
+  --md-code-hl-function-color: var(--paper-050);
+  --md-code-hl-name-color: var(--paper-050);
+  --md-code-hl-variable-color: var(--ink-200);
+  --md-code-hl-operator-color: var(--ink-200);
+  --md-code-hl-punctuation-color: var(--ink-200);
+  --md-code-hl-comment-color: var(--ink-300);
+  --md-code-hl-generic-color: var(--ink-200);
+}
+
+/* ===================================================================== *
+ * 3. Base
+ * ===================================================================== */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--selection-bg);
+}
+
+/* Focus is a 2px signal outline offset 2px — never removed. */
+.md-content a:focus-visible,
+.md-nav__link:focus-visible,
+.md-header__button:focus-visible,
+.md-search__input:focus-visible,
+.md-typeset .md-button:focus-visible,
+.md-typeset .tabbed-labels>label:focus-visible {
+  outline: var(--border-w-strong) solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ===================================================================== *
+ * 4. Chrome — header, sidebars, table of contents, footer
+ * ===================================================================== */
+
+.md-header {
+  border-bottom: var(--border-w) solid var(--border-subtle);
+  box-shadow: none;
+  transition: none;
+}
+
+.md-header--shadow {
+  box-shadow: none;
+}
+
+/* Header 56px. The title carries the line box Material positions the topic
+   against, so it has to grow with it. */
+.md-header__inner {
+  min-height: var(--header-h);
+}
+
+.md-header__title {
+  height: var(--header-h);
+  font: var(--type-ui);
+  font-size: var(--text-md);
+  /* The `font` shorthand above carries `/1`, so it resets any line-height set
+     before it. The topic is absolutely positioned and only centres against
+     this line box, so the full header height has to be restored after it. */
+  line-height: var(--header-h);
+  letter-spacing: var(--tracking-tight);
+}
+
+.md-header__topic:first-child {
+  font-weight: var(--weight-semibold);
+}
+
+/* The header reads "Project Gedanken" at every scroll position. Material slides
+   the site name out and the current page topic in once the H1 scrolls past,
+   which reads as the product name changing; pin the site topic and drop the
+   page topic, which the breadcrumb and the H1 already carry. */
+.md-header__topic+.md-header__topic {
+  display: none;
+}
+
+.md-header__title--active .md-header__topic {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  z-index: 0;
+}
+
+/* The mark carries ink strokes on paper and knockout strokes on ink. */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  width: 36px;
+  height: 36px;
+}
+
+/* 36px of mark on top of Material's own 8px padding and 4px margin would push
+   the bar past the 56px the header token sets, so the button hands back half
+   its padding and the mark grows into it. */
+.md-header__button.md-logo {
+  padding: var(--space-1);
+}
+
+/* Both places Material draws the mark: the header, and the drawer title that
+   replaces it below 76.25em. */
+[data-md-color-scheme="slate"] .md-header__button.md-logo img,
+[data-md-color-scheme="slate"] .md-nav__title .md-nav__button.md-logo img {
+  content: url("../img/gedanken-mark-dark.svg");
+}
+
+.md-search__form {
+  height: var(--control-h-md);
+  border: var(--border-w) solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-page);
+  box-shadow: none;
+  transition: var(--transition-control);
+}
+
+.md-search__form:hover {
+  border-color: var(--ink-300);
+  background: var(--surface-page);
+}
+
+[data-md-toggle="search"]:checked~.md-header .md-search__form {
+  border-color: var(--border-accent);
+  background: var(--surface-card);
+}
+
+.md-search__input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.md-search__output {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-overlay);
+}
+
+.md-search-result__meta {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* Sidebar 248px; header 56px. */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+  }
+}
+
+.md-nav {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.md-nav__title {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  box-shadow: none;
+  display: none;
+}
+
+.md-nav__link {
+  transition: var(--transition-control);
+}
+
+.md-nav__item .md-nav__link--active,
+.md-nav__item .md-nav__link--active code {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+/* Page tree: Material's own hover and focus resolve to `--md-accent-fg-color`,
+   which this system binds to plain ink — the colour the entries already sit at,
+   so nothing moved under the pointer and keyboard focus only showed a ring.
+   Entries take the system's quiet-interactive treatment instead: a sunken fill
+   under full ink, the same pair `.gd-btn--ghost` uses. Both element shapes
+   Material renders are covered: `a[href]` page links, and the `label[for]` that
+   stands in for them as the drawer's section and table-of-contents toggles. */
+.md-sidebar--primary .md-nav__link[href]:hover,
+.md-sidebar--primary .md-nav__link[for]:hover,
+.md-sidebar--primary .md-nav__link[href]:focus-visible,
+.md-sidebar--primary .md-nav__link[for]:focus-visible {
+  background: var(--nav-entry-fill);
+  color: var(--text-primary);
+}
+
+/* The fill is a sunken surface on paper. On ink a sunken surface reads as a
+   hole punched in the page — and it only clears the page by four values, so it
+   barely read at all; the entry lifts to the card surface there instead. */
+.md-sidebar--primary {
+  --nav-entry-fill: var(--surface-sunken);
+}
+
+[data-md-color-scheme="slate"] .md-sidebar--primary {
+  --nav-entry-fill: var(--surface-card);
+}
+
+/* The disclosure chevron on a collapsible section sits inside the entry, so the
+   entry's own fill is already the feedback. Material rings the icon separately
+   in `--md-accent-fg-color--transparent`, which would put a second accent under
+   the pointer on top of that fill. */
+.md-sidebar--primary .md-nav__icon:hover {
+  background-color: transparent;
+}
+
+/* The current page carries one mark at every width: ink plus a medium weight.
+   Material paints the drawer's active entry with the link accent and then drops
+   it to `--md-accent-fg-color` under the pointer, so pointing at the entry
+   erased what it was marking. The signal stays with the table of contents rule.
+   Three classes to outweigh `.md-nav--primary .md-nav__item--active > …`. */
+.md-sidebar--primary .md-nav__item .md-nav__link--active {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+/* The fill needs a hit area to sit in. Desktop entries have none — the 12px
+   inset belongs to the list, not the link — so the link claims it back on the
+   leading edge and pays it out as padding, leaving the text on the line it
+   already sits on. The trailing gutter is Material's and stays. */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary .md-nav__item>.md-nav__link {
+    margin-top: 0;
+    margin-left: calc(var(--space-2) * -1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  /* The scroll wrapper clips horizontally (`overflow-y: auto` forces the other
+     axis), and the entries now start 4px inside it, so the ring is drawn within
+     the padding rather than 2px outside where it would be cut. */
+  .md-sidebar--primary .md-nav__link:focus-visible {
+    outline-offset: calc(var(--border-w-strong) * -1);
+  }
+}
+
+/* Table of contents: the active entry is marked by a signal rule, the one
+   accent on the page. */
+.md-sidebar--secondary .md-nav__list {
+  border-left: var(--border-w) solid var(--border-subtle);
+}
+
+.md-sidebar--secondary .md-nav__list .md-nav__list {
+  border-left: 0;
+}
+
+.md-sidebar--secondary .md-nav__link {
+  margin-left: -1px;
+  padding-left: var(--space-3);
+  border-left: var(--border-w-strong) solid transparent;
+}
+
+/* Material's own hover resolves to `--md-accent-fg-color`, which this system
+   binds to plain ink — the same colour the entries already sit at, so nothing
+   moved. Hover previews the active rule in a quieter grey instead, and lifts
+   passed entries back to full ink. */
+.md-sidebar--secondary .md-nav__link[href]:hover,
+.md-sidebar--secondary .md-nav__link[href]:focus {
+  border-left-color: var(--text-tertiary);
+  color: var(--text-primary);
+}
+
+.md-sidebar--secondary .md-nav__link--active,
+.md-sidebar--secondary .md-nav__link--active[href]:hover,
+.md-sidebar--secondary .md-nav__link--active[href]:focus {
+  border-left-color: var(--signal-500);
+}
+
+[data-md-color-scheme="slate"] .md-sidebar--secondary .md-nav__link--active,
+[data-md-color-scheme="slate"] .md-sidebar--secondary .md-nav__link--active[href]:hover,
+[data-md-color-scheme="slate"] .md-sidebar--secondary .md-nav__link--active[href]:focus {
+  border-left-color: var(--signal-400);
+}
+
+.md-footer {
+  border-top: var(--border-w) solid var(--border-subtle);
+}
+
+.md-footer-meta {
+  font-size: var(--text-sm);
+}
+
+.md-footer__title {
+  font: var(--type-ui);
+  font-size: var(--text-md);
+}
+
+.md-footer__direction {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  opacity: 1;
+  color: var(--ink-300);
+}
+
+.md-footer__link {
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+/* ===================================================================== *
+ * 5. Typography — three weights, no italics, prose capped at 68ch
+ * ===================================================================== */
+
+.md-typeset {
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+
+/* Prose caps at 68ch; code, signatures and tables keep the full column. */
+.md-typeset p,
+.md-typeset ul,
+.md-typeset ol,
+.md-typeset blockquote {
+  max-width: var(--measure-prose);
+}
+
+.md-typeset table p,
+.md-typeset table ul,
+.md-typeset table ol,
+.md-typeset .admonition p,
+.md-typeset details p {
+  max-width: none;
+}
+
+.md-typeset h1 {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-primary);
+  margin-bottom: var(--space-6);
+}
+
+.md-typeset h2 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-display);
+  /* Borders carry hierarchy, not shadow — each section opens on a rule. */
+  border-top: var(--border-w) solid var(--border-subtle);
+  margin-top: var(--gutter-section);
+  padding-top: var(--space-6);
+}
+
+.md-typeset h3 {
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  margin-top: var(--space-8);
+}
+
+.md-typeset h4 {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  margin-top: var(--space-6);
+}
+
+/* h5/h6 are the mono label role: uppercased by CSS, tracked out. */
+.md-typeset h5,
+.md-typeset h6 {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: var(--space-6);
+}
+
+/* No bold, no italics — emphasis steps up one weight instead. */
+.md-typeset strong,
+.md-typeset b {
+  font-weight: var(--weight-semibold);
+}
+
+.md-typeset em {
+  font-style: normal;
+  font-weight: var(--weight-medium);
+}
+
+.md-typeset a {
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.md-typeset hr {
+  border-bottom: var(--border-w) solid var(--border-subtle);
+}
+
+.md-typeset blockquote {
+  border-left: var(--border-w-strong) solid var(--border-default);
+  color: var(--text-secondary);
+}
+
+/* ===================================================================== *
+ * 6. Code — mono is for what a machine produced or consumes
+ * ===================================================================== */
+
+.md-typeset code {
+  font-size: 0.88em;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-xs);
+  border: var(--border-w) solid var(--border-subtle);
+  word-break: normal;
+}
+
+.md-typeset pre>code {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  padding: var(--space-4) var(--gutter-card);
+  border: 0;
+}
+
+.md-typeset a>code {
+  color: inherit;
+  background: var(--surface-accent-soft);
+  border-color: transparent;
+}
+
+.md-typeset pre,
+.md-typeset .highlight {
+  border-radius: var(--radius-md);
+}
+
+.md-typeset .highlight,
+.md-typeset .highlighttable {
+  border: var(--border-w) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--md-code-bg-color);
+}
+
+.md-typeset .highlight code,
+.md-typeset .highlight pre {
+  background: transparent;
+}
+
+.md-typeset .highlight .filename {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: var(--surface-sunken);
+  border-bottom: var(--border-w) solid var(--border-subtle);
+  box-shadow: none;
+}
+
+.md-typeset .linenos,
+.md-typeset .linenodiv {
+  color: var(--text-tertiary);
+  border-right: var(--border-w) solid var(--border-subtle);
+  background: transparent;
+}
+
+.md-clipboard {
+  color: var(--text-tertiary);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.md-clipboard:hover,
+.md-clipboard:focus {
+  color: var(--text-primary);
+}
+
+/* Code annotations use the accent, at label size. */
+.md-annotation__index {
+  background: var(--surface-accent);
+  border-radius: var(--radius-pill);
+}
+
+.md-typeset kbd {
+  border-radius: var(--radius-xs);
+  box-shadow: none;
+  border: var(--border-w) solid var(--md-typeset-kbd-border-color);
+  font: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ===================================================================== *
+ * 7. Tables
+ * ===================================================================== */
+
+.md-typeset table:not([class]) {
+  border: var(--border-w) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.md-typeset table:not([class]) th {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: var(--surface-sunken);
+  border-bottom: var(--border-w) solid var(--border-subtle);
+  padding: var(--space-3) var(--space-4);
+  min-width: 0;
+}
+
+.md-typeset table:not([class]) td {
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--border-w) solid var(--border-subtle);
+  vertical-align: top;
+}
+
+.md-typeset table:not([class]) tr:hover {
+  background: var(--surface-sunken);
+}
+
+/* ===================================================================== *
+ * 8. Admonitions & details — flat, bordered, one semantic colour each
+ * ===================================================================== */
+
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+/* `[class]` matches the specificity of Material's per-type rules so a single
+   pair of declarations can drive every flavour off two custom properties. */
+.md-typeset .admonition[class],
+.md-typeset details[class] {
+  border: var(--border-w) solid var(--border-subtle);
+  border-left: var(--border-w-strong) solid var(--gd-adm, var(--border-strong));
+}
+
+.md-typeset .admonition[class]:focus-within,
+.md-typeset details[class]:focus-within {
+  box-shadow: none;
+  border-color: var(--border-default);
+  border-left-color: var(--gd-adm, var(--border-strong));
+}
+
+.md-typeset [class]>.admonition-title,
+.md-typeset [class]>summary {
+  background: var(--gd-adm-bg, var(--surface-sunken));
+  border-bottom: var(--border-w) solid var(--border-subtle);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font: var(--type-ui);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.md-typeset [class]>.admonition-title::before,
+.md-typeset [class]>summary::before {
+  background-color: var(--gd-adm, var(--text-secondary));
+}
+
+.md-typeset [class]>summary::after {
+  color: var(--gd-adm, var(--text-tertiary));
+}
+
+.md-typeset .note,
+.md-typeset .info,
+.md-typeset .todo {
+  --gd-adm: var(--state-info);
+  --gd-adm-bg: var(--state-info-bg);
+}
+
+.md-typeset .abstract,
+.md-typeset .summary,
+.md-typeset .tldr,
+.md-typeset .quote,
+.md-typeset .cite,
+.md-typeset .example {
+  --gd-adm: var(--ink-500);
+  --gd-adm-bg: var(--surface-sunken);
+}
+
+.md-typeset .tip,
+.md-typeset .hint,
+.md-typeset .important,
+.md-typeset .question,
+.md-typeset .help,
+.md-typeset .faq {
+  --gd-adm: var(--signal-500);
+  --gd-adm-bg: var(--surface-accent-soft);
+}
+
+.md-typeset .success,
+.md-typeset .check,
+.md-typeset .done {
+  --gd-adm: var(--state-ok);
+  --gd-adm-bg: var(--state-ok-bg);
+}
+
+.md-typeset .warning,
+.md-typeset .caution,
+.md-typeset .attention {
+  --gd-adm: var(--state-warn);
+  --gd-adm-bg: var(--state-warn-bg);
+}
+
+.md-typeset .failure,
+.md-typeset .fail,
+.md-typeset .missing,
+.md-typeset .danger,
+.md-typeset .error,
+.md-typeset .bug {
+  --gd-adm: var(--state-danger);
+  --gd-adm-bg: var(--state-danger-bg);
+}
+
+/* The muted `*-bg` tints are light-mode values; on dark, tint the card with
+   the semantic colour instead of repainting it. */
+[data-md-color-scheme="slate"] .md-typeset .admonition[class],
+[data-md-color-scheme="slate"] .md-typeset details[class] {
+  --gd-adm-bg: var(--surface-sunken);
+}
+
+/* ===================================================================== *
+ * 9. Content tabs, buttons, tooltips
+ * ===================================================================== */
+
+.md-typeset .tabbed-labels {
+  box-shadow: none;
+  border-bottom: var(--border-w) solid var(--border-subtle);
+  gap: var(--space-6);
+}
+
+.md-typeset .tabbed-labels>label {
+  font: var(--type-ui);
+  padding: var(--space-3) 0;
+  color: var(--text-secondary);
+  transition: var(--transition-control);
+}
+
+.md-typeset .tabbed-labels>label:hover {
+  color: var(--text-primary);
+}
+
+.md-typeset .tabbed-set>input:checked+label {
+  color: var(--text-primary);
+}
+
+.md-typeset .tabbed-labels--linked>label>a {
+  padding: 0;
+}
+
+.js .md-typeset .tabbed-labels::before {
+  height: var(--border-w-strong);
+  background: var(--surface-accent);
+}
+
+.md-typeset .md-button {
+  height: var(--control-h-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-4);
+  border: var(--border-w) solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font: var(--type-ui);
+  transition: var(--transition-control);
+}
+
+.md-typeset .md-button:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-card);
+  color: var(--text-primary);
+}
+
+.md-typeset .md-button--primary {
+  background: var(--ink-900);
+  border-color: var(--ink-900);
+  color: var(--paper-050);
+}
+
+.md-typeset .md-button--primary:hover {
+  background: var(--ink-700);
+  border-color: var(--ink-700);
+  color: var(--paper-050);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary {
+  background: var(--paper-050);
+  border-color: var(--paper-050);
+  color: var(--ink-900);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary:hover {
+  background: var(--paper-100);
+  border-color: var(--paper-100);
+  color: var(--ink-900);
+}
+
+.md-tooltip,
+.md-tooltip2__inner {
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-overlay);
+  font-size: var(--text-sm);
+}
+
+/* Nothing bounces, nothing slides in from off-screen. */
+.md-typeset .md-status,
+.md-nav__link,
+.md-top {
+  transition-timing-function: var(--ease-standard);
+}
+
+.md-top {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-raised);
+  font: var(--type-ui);
+}
+
+/* ===================================================================== *
+ * 10. API reference (mkdocstrings)
+ * ===================================================================== */
+
+.doc-heading code,
+.md-typeset .doc-object-name {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-normal);
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.md-typeset .doc-class-bases {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+/* Symbol labels read as badges, not prose. */
+.md-typeset .doc-labels {
+  display: inline-flex;
+  gap: var(--space-1);
+  vertical-align: middle;
+}
+
+.md-typeset .doc-label {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font: var(--type-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.md-typeset .doc-label-async,
+.md-typeset .doc-label-dataclass {
+  background: var(--surface-accent-soft);
+  color: var(--signal-600);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .doc-label-async,
+[data-md-color-scheme="slate"] .md-typeset .doc-label-dataclass {
+  color: var(--signal-400);
+}
+
+/* "Parameters", "Returns", "Raises" are section labels, not headings. */
+.md-typeset .doc-section-title {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.md-typeset .doc-signature {
+  font-size: var(--text-sm);
+}
+
+/* Members hang off their parent on a rule rather than floating free. */
+.md-typeset .doc-children .doc-object {
+  border-left: var(--border-w) solid var(--border-subtle);
+  padding-left: var(--gutter-card);
+}
+
+.md-typeset .doc-children .doc-heading {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.md-typeset .doc-md-description {
+  color: var(--text-secondary);
+}

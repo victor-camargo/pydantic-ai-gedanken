@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
+  <!-- Tightened sub-32px cut of the mark. Ink strokes on light browser chrome,
+       knockout strokes on dark — the same two tones the identity sheet defines. -->
+  <style>
+    .lens { fill: #A9552F; }
+    .ring { fill: none; stroke: #16161A; stroke-width: 10; }
+    @media (prefers-color-scheme: dark) {
+      .lens { fill: #C9713F; }
+      .ring { stroke: #FAF9F7; }
+    }
+  </style>
+  <path class="lens" d="M50 22 A31 31 0 0 0 50 78 A31 31 0 0 0 50 22"></path>
+  <circle class="ring" cx="33" cy="50" r="31"></circle>
+  <circle class="ring" cx="67" cy="50" r="31"></circle>
+</svg>

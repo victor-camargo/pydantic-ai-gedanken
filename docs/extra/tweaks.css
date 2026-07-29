@@ -1,0 +1,37 @@
+/* Local tweaks on top of docs/extra/gedanken.css — tokens come from there. */
+
+/* Compact `Type:` / `Default:` footer rendered under each documented attribute
+   by docs/.templates/python/material/attribute.html.jinja. */
+.doc-attribute-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-6);
+  margin-top: var(--space-2) !important;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.doc-attribute-facts b {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+}
+
+.doc-attribute-facts code {
+  font-size: 0.95em;
+}
+
+/* Category headings ("Attributes", "Methods") group members inside a class;
+   keep them quieter than the class heading they sit under. */
+.doc-contents h3,
+.doc-contents h4,
+.doc-contents h5 {
+  margin-top: 1.2em;
+}
+
+/* Members are indented under their parent by the theme; give the prose room. */
+.doc-children .doc-contents {
+  margin-bottom: 1.2em;
+}

@@ -1,0 +1,16 @@
+{#- English translations, delegating to mkdocstrings-python's own table.
+
+Only one label is overridden: the category heading for a class's functions is
+"Methods:" upstream, which reads oddly next to the colon-less "Attributes"
+heading right above it. Every other key falls through to the base table, so new
+upstream keys keep working without touching this file.
+-#}
+{% import "_base/languages/en.html.jinja" as base with context %}
+
+{% macro t(key) %}
+  {%- if key == "Methods:" -%}
+    Methods
+  {%- else -%}
+    {{- base.t(key) -}}
+  {%- endif -%}
+{% endmacro %}
