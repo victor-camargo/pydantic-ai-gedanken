@@ -1,0 +1,114 @@
+# Social card layout for the Gedanken design system.
+#
+# Derived from Material's built-in `default` layout, changed where the system
+# has an opinion: ink page, knockout mark (the lens is the one accent), IBM Plex
+# Sans at SemiBold/Medium/Regular — the three weights, no Bold — and a hairline
+# rule doing the separating instead of a colour block.
+
+definitions:
+  - &background_color "#16161A" # ink-900
+  - &rule_color "#2E2C29" # ink-700
+  - &text_primary "#FAF9F7" # paper-050
+  - &text_secondary "#A9A49C" # ink-200
+
+  - &font_family "IBM Plex Sans"
+
+  # Knockout cut of the mark: paper strokes, signal lens, for the ink page.
+  - &logo >-
+    {{ config.docs_dir }}/img/gedanken-mark-dark.svg
+
+  - &site_name >-
+    {{ config.site_name }}
+
+  - &page_title >-
+    {%- if layout.title -%}
+      {{ layout.title }}
+    {%- else -%}
+      {{ page.meta.get("title", page.title) }}
+    {%- endif -%}
+
+  - &page_title_with_site_name >-
+    {%- if not page.is_homepage -%}
+      {{ page.meta.get("title", page.title) }} - {{ config.site_name }}
+    {%- else -%}
+      {{ config.site_name }}
+    {%- endif -%}
+
+  - &page_description >-
+    {%- if layout.description -%}
+      {{ layout.description }}
+    {%- else -%}
+      {{ page.meta.get("description", config.site_description) | x }}
+    {%- endif -%}
+
+tags:
+  og:type: website
+  og:title: *page_title_with_site_name
+  og:description: *page_description
+  og:image: "{{ image.url }}"
+  og:image:type: "{{ image.type }}"
+  og:image:width: "{{ image.width }}"
+  og:image:height: "{{ image.height }}"
+  og:url: "{{ page.canonical_url }}"
+
+  twitter:card: summary_large_image
+  twitter:title: *page_title_with_site_name
+  twitter:description: *page_description
+  twitter:image: "{{ image.url }}"
+
+size: { width: 1200, height: 630 }
+layers:
+  # Page
+  - background:
+      color: *background_color
+
+  # The mark, at its clearspace from the page gutter
+  - size: { width: 48, height: 48 }
+    offset: { x: 64, y: 60 }
+    background:
+      image: *logo
+
+  # Site name
+  - size: { width: 640, height: 30 }
+    offset: { x: 128, y: 69 }
+    typography:
+      content: *site_name
+      align: start
+      color: *text_primary
+      font:
+        family: *font_family
+        style: Medium
+
+  # Borders carry hierarchy, not shadow
+  - size: { width: 1072, height: 1 }
+    offset: { x: 64, y: 160 }
+    background:
+      color: *rule_color
+
+  # Page title
+  - size: { width: 1000, height: 240 }
+    offset: { x: 62, y: 208 }
+    typography:
+      content: *page_title
+      align: start
+      color: *text_primary
+      line:
+        amount: 3
+        height: 1.15
+      font:
+        family: *font_family
+        style: SemiBold
+
+  # Page description
+  - size: { width: 1000, height: 68 }
+    offset: { x: 64, y: 498 }
+    typography:
+      content: *page_description
+      align: start
+      color: *text_secondary
+      line:
+        amount: 2
+        height: 1.55
+      font:
+        family: *font_family
+        style: Regular

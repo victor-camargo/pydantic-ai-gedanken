@@ -1,0 +1,41 @@
+{#- Custom mkdocstrings template for Python attributes.
+
+Renders an attribute as: bare name heading, then the docstring, then a compact
+`Type:` / `Default:` footer -- instead of the stock label chips plus a separate
+signature code block, which buries the prose under syntax.
+
+Only the presentation changes; every mkdocstrings option still applies.
+-#}
+{% extends "_base/attribute.html.jinja" %}
+
+{% block labels %}
+  {#- No `class-attribute` / `instance-attribute` chips: the type footer says it better. -#}
+{% endblock labels %}
+
+{% block signature %}
+  {#- No separate signature code block; the footer below carries type and default. -#}
+{% endblock signature %}
+
+{% block contents scoped %}
+  {{ super() }}
+  {% if attribute.annotation or attribute.value %}
+    <p class="doc doc-attribute-facts">
+      {% if attribute.annotation %}
+        <span class="doc-attribute-fact">
+          <b>Type:</b>
+          {% with expression = attribute.annotation %}
+            <code>{% include "expression.html.jinja" with context %}</code>
+          {% endwith %}
+        </span>
+      {% endif %}
+      {% if attribute.value %}
+        <span class="doc-attribute-fact">
+          <b>Default:</b>
+          {% with expression = attribute.value %}
+            <code>{% include "expression.html.jinja" with context %}</code>
+          {% endwith %}
+        </span>
+      {% endif %}
+    </p>
+  {% endif %}
+{% endblock contents %}

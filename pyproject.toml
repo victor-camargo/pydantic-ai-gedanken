@@ -1,0 +1,146 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pydantic-ai-gedanken"
+description = "ProjectGedanken"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic-ai-slim>=2.1.0",
+    "pydantic-ai-harness>=0.9.0",
+    "jsonschema>=4.26.0",
+    "dotenv>=0.9.9",
+    "datamodel-code-generator>=0.71.0",
+]
+# As we provide a CLI, we want to avoid using `importlib.metadata.version()`
+# to populate the `__version__` attribute (known to be slow):
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/victor-camargo/pydantic-ai-gedanken"
+Source = "https://github.com/victor-camargo/pydantic-ai-gedanken"
+Changelog = "https://github.com/victor-camargo/pydantic-ai-gedanken/blob/main/CHANGELOG.md"
+
+[project.scripts]
+pydantic-ai-gedanken = "pydantic_ai_gedanken.cli:cli"
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "pyright",
+    "pytest",
+    "pre-commit",
+    "coverage[toml]",
+    "openai>=2.47.0",
+    "prek>=0.4.11",
+    "uvicorn>=0.51.0",
+    "datamodel-code-generator[http]>=0.71.0",
+    "pydantic-ai-slim[web]>=2.18.0",
+]
+
+lint = [
+    "mypy",
+    "pyright",
+    "ruff"
+]
+
+docs = [
+    "black",
+    "mkdocs",
+    "mkdocs-glightbox",
+    "mkdocs-llmstxt",
+    "mkdocs-redirects",
+    "mkdocs-material[imaging]",
+    "mkdocstrings-python",
+    "griffe-warnings-deprecated",
+]
+docs-upload = [
+    "algoliasearch",
+    "pydantic"
+]
+
+[tool.hatch.version]
+path = "pydantic_ai_gedanken/__init__.py"
+
+[tool.uv]
+default-groups = ["dev"]
+required-version = ">=0.8.4"
+
+[tool.uv.sources]
+pydantic-docs = { git = "https://github.com/pydantic/pydantic-docs" }
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.format]
+docstring-code-format = false
+quote-style = "single"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle (E)
+    "W",      # pycodestyle (W)
+    "F",      # Pyflakes
+    "UP",     # pyupgrade
+    "I",      # isort
+    "PL",     # Pylint
+    "RUF",    # Ruff
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "FA",     # flake8-future-annotations
+    "PIE",    # flake8-pie
+    "PYI",    # flake8-pyi
+    "T20",    # flake8-print
+    "Q",      # flake8-quotes
+    "RSE",    # flake8-raise
+    "PTH",    # flake8-use-pathlib
+    "RUF100", # unused-noqa
+    "C90",    # mccabe complexity
+    "D",      # pydocstyle
+    "TID251"  # flake8-tidy-defaults: checks for banned imports
+]
+ignore = [
+    "PLR0912",
+    "PLR2004",
+]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.isort]
+known-first-party = ["pydantic_ai_gedanken"]
+
+[tool.ruff.lint.per-file-ignores]
+'tests/**/*.py' = ['D']
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.12"
+include = ["pydantic_ai_gedanken"]
+exclude = [".venv", "**/node_modules", "**/__pycache__", "**/.*"]
+
+[tool.coverage.run]
+branch = true
+source = ['pydantic_ai_gedanken', 'tests']
+
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+exclude_lines = [
+    'pragma: no cover',
+    'pragma: lax no cover',
+    'assert_never',
+    'if TYPE_CHECKING:',
+    '^\s*\.\.\.$', # Protocol method bodies
+]

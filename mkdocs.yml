@@ -1,0 +1,169 @@
+site_name: Project Gedanken
+site_description: Project Gedanken
+site_url: https://victor-camargo.github.io/pydantic-ai-gedanken/
+repo_url: https://github.com/victor-camargo/pydantic-ai-gedanken
+repo_name: victor-camargo/pydantic-ai-gedanken
+
+nav:
+- src/index.md
+- Capabilities:
+  - DynamicOutput: src/capabilities/dynamic_output.md
+  - CustomDocs: src/capabilities/custom_docs.md
+- API Reference:
+  - dynamic_output: src/api_reference/dynamic_output.md
+
+extra:
+  # hide the "Made with Material for MkDocs" message
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/victor-camargo/pydantic-ai-gedanken
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/victor-camarg0
+
+theme:
+  name: "material"
+  # `custom` keeps Material from emitting a built-in palette; the Gedanken
+  # tokens drive every color from docs/extra/gedanken.css instead.
+  palette:
+    - media: "(prefers-color-scheme)"
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-auto
+        name: "Switch to light mode"
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: "Switch to dark mode"
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: "Switch to system preference"
+  # The design system uses three weights (400/500/600) and no italics; Material's
+  # own Google Fonts request asks for 300/700 instead, so gedanken.css imports
+  # IBM Plex with the right cut and sets --md-text-font / --md-code-font.
+  font: false
+  features:
+    - search.suggest
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - navigation.path
+    - navigation.indexes
+    - navigation.tracking
+    - toc.follow
+    - announce.dismiss
+    - navigation.top
+    - content.tooltips
+  # Ink strokes for the paper header; gedanken.css swaps in the knockout cut
+  # under the dark scheme. The favicon is the tightened sub-32px cut.
+  logo: "img/gedanken-mark-light.svg"
+  favicon: "img/gedanken-favicon-16-ink.svg"
+  icon:
+    repo: fontawesome/brands/github
+
+# https://www.mkdocs.org/user-guide/configuration/#validation
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+extra_css:
+  # Gedanken tokens + the Material bridge; tweaks.css layers on top of it.
+  - "extra/gedanken.css"
+  - "extra/tweaks.css"
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.mark
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.tilde
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      pygments_lang_class: true
+  - pymdownx.extra:
+      pymdownx.superfences:
+        custom_fences:
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - sane_lists # this means you can start a list from any number
+  - material.extensions.preview:
+      targets:
+        include:
+          - '*'
+
+watch:
+  - pydantic_ai_gedanken
+
+plugins:
+  - search
+  - social:
+      cards_layout_dir: docs/layouts
+      cards_layout: gedanken
+  - glightbox
+  - mkdocstrings:
+      custom_templates: docs/.templates
+      handlers:
+        python:
+          paths: [pydantic_ai_gedanken]
+          options:
+            docstring_style: google
+            docstring_options:
+              warn_unknown_params: false
+              ignore_init_summary: true
+            relative_crossrefs: true
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            # Group members under "Attributes" / "Methods" headings instead of
+            # interleaving them in source order.
+            group_by_category: true
+            show_category_heading: true
+            # Render the symbol's own name as a heading, unqualified.
+            show_root_heading: true
+            show_root_full_path: false
+            show_object_full_path: false
+            show_bases: true
+            # Docstrings carry the explanation; the "Source code in ..." fold does not.
+            show_source: false
+            show_labels: true
+            show_symbol_type_heading: false
+            show_symbol_type_toc: false
+            # 2 because API pages put each symbol directly under the page H1
+            heading_level: 2
+            extensions:
+              - griffe_warnings_deprecated:
+                  kind: warning
+                  title: Deprecated
+          inventories:
+            - url: https://docs.python.org/3/objects.inv
+            - url: https://docs.pydantic.dev/latest/objects.inv
+            - url: https://pydantic.dev/docs/ai/objects.inv
+            - url: https://fastapi.tiangolo.com/objects.inv
+            - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
+            - url: https://anyio.readthedocs.io/en/stable/objects.inv
