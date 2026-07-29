@@ -15,7 +15,7 @@ Instead of you deciding up-front what the structured answer looks like, the agen
 Every version is a plain `<name>.v<version>.py` module on disk, indexed by a `manifest.json` — readable,
 diffable, and hand-editable.
 
-Full signatures live in the [DynamicOutput API](dynamic_output_api.md) reference.
+Full signatures live in the [DynamicOutput API](../api_reference/dynamic_output.md) reference.
 
 ## Quick start
 
